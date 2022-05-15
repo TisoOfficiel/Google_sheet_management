@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+	<!--INCLUDE REQUIRED EXTERNAL JAVASCRIPT AND CSS LIBRARIES-->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Roboto:wght@300&family=Ubuntu&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+ <?!= include('style'); ?>
+
+</head>
+<body>
+  <section>
+        <div id="modal_background-container"class="modal_background-container">
+            <div class="container-register" id="container-register">
+                <div class="content-container">
+                    <div class="form-container">
+                        <h1>Ajouter un employé</h1>
+                        <form id="myForm" onsubmit="handleFormSubmit(this)">
+                            <div class="form-input">
+                                <i class="material-icons">
+                                    person</i>
+                                <input type="text" placeholder="Nom" name="nom" id="nom" required="required">
+                            </div>
+                            <div class="form-input">
+                                <i class="material-icons">
+                                    person</i>
+                                <input type="text" placeholder="Prénom" name="prenom" id="prenom" required="required">
+                            </div>
+                            <div class="form-input">
+                                <i class="material-icons">
+                                    phone_iphone</i>
+                                    <input type="tel" placeholder="Téléphone" name="phone" id="phone" required="required" pattern="[0-9]{3}-[0-9]{4}">
+                            </div>
+                            <div class="form-input">
+                               <select name="role" id="" class="role-select" required="required">
+                                   <option value="Ouvrier">
+                                        Ouvrier
+                                   </option>
+                                   <option value="Manager">
+                                        Manager
+                                   </option>
+                                   <option value="Adjoint">
+                                       Adjoint
+                                   </option>
+                               </select>
+                            </div>
+                            <div class="form-input form-button">
+                                <input type="submit" value="Enregistrer">
+                            </div>
+                        </form>
+                    </div>
+        
+                    <div class="decription-container">
+                        <div class="cross" onclick='closemodal()'>
+                            <i class="material-icons">close</i>
+                        </div>
+                        <h3>Ravie de vous revoir!</h3>
+                        <p>Veuillez renseigner tout les champs afin d'enregistrer un nouvelle employé</p>
+                    </div>
+                </div>
+            </div>
+            <div class="container-edit" id="container-edit">
+                <div class="content-container">
+                    <div class="form-container-edit">
+                        <h1 style="color:white">Mettre à jour un employé</h1>
+                        <div class="cross" onclick='closemodal()'>
+                            <i class="material-icons" style="margin:0">close</i>
+                        </div>
+                        <form id="editform" >
+                            <div class="form-edit-content">
+                                <div class="info-perso">
+                                <div class="form-input">
+                                    <i class="material-icons">
+                                        person</i>
+                                    <input type="text" placeholder="Nom" name="newnom" id="newnom" required="required">
+                                </div>
+                                <div class="form-input">
+                                    <i class="material-icons">
+                                        person</i>
+                                    <input type="text" placeholder="Prénom" name="newprenom" id="newprenom" required="required">
+                                </div>
+                                <div class="form-input">
+                                    <i class="material-icons">
+                                        phone_iphone</i>
+                                        <input type="tel" placeholder="Téléphone" name="newtelephone" id="newtelephone" required="required" pattern="[0-9]{3}-[0-9]{4}">
+                                </div>
+                                <div class="form-input">
+                                   <select name="newrole" id="newrole"class="role-select" required="required">
+                                       <option value="Ouvrier">
+                                            Ouvrier
+                                       </option>
+                                       <option value="Manager">
+                                            Manager
+                                       </option>
+                                       <option value="Adjoint">
+                                            Adjoint
+                                       </option>
+                                   </select>
+                                </div>
+                            </div>
+                            <div class="info-entreprise">
+                                <div class="input-form">
+                                    <label for="">Qte Run</label>
+                                    <div class="tt">
+                                        <input type="number"name="newrun" id="newrun"  min="0" required="required">
+                                    </div>
+                                </div>
+                                <div class="input-form">
+                                    <label for="">Qte Particulier</label>
+                                    <div class="tt">
+                                        <input type="number"name="newpart" id="newpart"  min="0" required="required">
+                                    </div>
+                                </div>
+                                <div class="input-form">
+                                    <label for="">Qte Entreprise</label>
+                                    <div class="tt">
+                                        <input type="number"name="newent" id="newent"  min="0" required="required">
+                                    </div>
+                                </div>
+                                <input type="text"name="id" id="iduser" style="display:none" value="">
+                            </div>
+                            </div>
+                            <div class="form-input form-button">
+                                <input type="submit" value="Modifier">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="container-edit" id="container-ouvrier">
+                <div class="content-container">
+                    <div class="form-container-edit">
+                        <h1 style="color:white">Taxe pour les ouvriers</h1>
+                        <div class="cross" onclick='closemodal()'>
+                            <i class="material-icons" style="margin:0">close</i>
+                        </div>
+                        <form id="ouvrierform" onsubmit="sendOuvrier(this)">
+                            <label for="">Saisissez le pourcentage pour les ouvrier</label>
+                            <div class="form-input">
+                                <input type="number" id="taxeouvrier" min="1"required="required">
+                            </div>
+                               
+                            <div class="form-input form-button">
+                                <input type="submit" value="Modifier">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="container-edit" id="container-manager">
+                <div class="content-container">
+                    <div class="form-container-edit">
+                        <h1 style="color:white">Taxe pour les ouvriers</h1>
+                        <div class="cross" onclick='closemodal()'>
+                            <i class="material-icons" style="margin:0">close</i>
+                        </div>
+                        <form id="managerform" onsubmit="sendManager(this)">
+                            <label for="">Saisissez le pourcentage pour les ouvrier</label>
+                            <div class="form-input">
+                                <input type="number" id="taxemanager" min="1"required="required">
+                            </div>
+                               
+                            <div class="form-input form-button">
+                                <input type="submit" value="Modifier">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="container-edit" id="container-adjoint">
+                <div class="content-container">
+                    <div class="form-container-edit">
+                        <h1 style="color:white">Taxe pour les ouvriers</h1>
+                        <div class="cross" onclick='closemodal()'>
+                            <i class="material-icons" style="margin:0">close</i>
+                        </div>
+                        <form id="adjointform" onsubmit="sendAdjoint(this)">
+                            <label for="">Saisissez le pourcentage pour les ouvrier</label>
+                            <div class="form-input">
+                                <input type="number" id="taxeadjoint" min="1"required="required">
+                            </div>
+                               
+                            <div class="form-input form-button">
+                                <input type="submit" value="Modifier">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Widget top -->
+        <div class="widget-container">
+            <div class="gains-container">
+                <div class="left">
+                    <h3>Recette du moment</h3>
+                    <h1 id="price"></h1>
+                </div>
+                <div class="right paiement">
+                    <i class="material-icons">payment</i>
+                </div>
+            </div>
+            <div class="employe-container">
+                <div class="left">
+                    <h3>Nombre d'employé</h3>
+                    <h1 id="nbemploye"></h1>
+                </div>
+                <div class="right people">
+                    <i class="material-icons">people_alt</i>
+                </div>
+            </div>
+            <div class="quantite-container">
+                <div class="left" style="display:flex">
+                  <h3 id="Ouvrier"></h3>
+                  <h3 id="Manager" ></h3>
+                  <h3 id="Adjoint"></h3>
+                </div>
+               
+            </div>
+        </div>
+        
+        <!-- Table and recent user -->
+        <main>
+            <div class="table-container">
+                <table id="table-content">
+                    <div class="table-option-container">
+                        <div style="display:flex;justify-content:space-around;color:white;margin-left:50px;">
+                            <button id="OuvrierTAXE" onclick="openOuvrier()"></button>
+                            <button id="ManagerTAXE" onclick="openManager()"></button>
+                            <button id="AdjointTAXE" onclick="openAdjoint()"></button>
+                        </div>
+                        <div class="seach-user">
+                            <i class="material-icons">search</i>
+                            <input type="text" id="filter-user" onkeyup="myFunction()" placeholder="Rechercher un nom ...">
+                        </div>
+                        <div class="btn-container">
+                            <div class="add-user" onclick="adduser()">
+                                <i class="material-icons">add</i>
+                                <header>Ajouter un employé</header>
+                            </div>
+                        </div>
+                    </div>
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Téléphone</th>
+                            <th>Statut</th>
+                            <th>Quantité run</th>
+                            <th>Quantité particulier</th>
+                            <th>Quantité entreprise</th>
+                            <th>Salaire</th>
+                            <th>Gains d'entreprise</th>
+                            <th>Éligible</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                    </tbody>
+                </table>
+            </div>
+           
+        </main>
+    </section>
+
+ 
+    <?!= include('JavaScript'); ?>
+
+
+</body>
+
+</html>

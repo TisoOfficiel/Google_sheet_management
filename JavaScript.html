@@ -1,0 +1,289 @@
+<script>
+
+    document.addEventListener ("DOMContentLoaded", function(){
+    
+        google.script.run.withSuccessHandler(generateTable).getTableData();
+        google.script.run.withSuccessHandler(Total).getTotal();
+        google.script.run.withSuccessHandler(nbEmploye).employeTotal();
+        google.script.run.withSuccessHandler(nbrole).roleTotal();
+        google.script.run.withSuccessHandler(nbtaxe).taxeTotal();
+        
+    });
+    
+     function preventFormSubmit(){
+            var forms=document.querySelectorAll('form');
+            for (var i=0;i<forms.length;i++){
+            forms[i].addEventListener('submit',function(event){
+                event.preventDefault();
+            });
+            }
+        }
+    window.addEventListener('load',preventFormSubmit);
+    
+    function handleFormSubmit(formObject){
+      google.script.run.processForm(formObject);
+      closemodal();
+      reLoad();
+    }
+    
+    
+    function reLoad() {
+           google.script.run
+          .withSuccessHandler(function(url){
+            window.open(url,'_top');
+          })
+          .getScriptURL();
+    }
+    
+    function Total(dataTotal){
+        document.getElementById('price').innerText = Math.round(dataTotal)+" €";
+    }
+    function nbEmploye(nbemploye){
+        document.getElementById('nbemploye').innerText = (nbemploye);
+    }
+    
+    function nbrole(nbrole){
+      document.getElementById('Ouvrier').innerText = "Ouvrier "+(nbrole[0]);
+      document.getElementById('Manager').innerText = "Manager "+(nbrole[1]);
+      document.getElementById('Adjoint').innerText = "Adjoint "+(nbrole[2]);
+    }
+    
+    function nbtaxe(nbtaxe){
+      document.getElementById('OuvrierTAXE').innerText = "Ouvrier "+(nbtaxe[0]*100+" %");
+      document.getElementById('ManagerTAXE').innerText = "Manager "+(nbtaxe[1]*100+" %");
+      document.getElementById('AdjointTAXE').innerText = "Adjoint "+(nbtaxe[2]*100)+" %";
+    }
+    function generateTable(dataArray){
+    
+      var tbody=document.getElementById("table-body");
+    
+      dataArray.forEach(function(r){
+        
+    
+       
+        var row=document.createElement ("tr");
+        for(var i=1; i < r.length;i++){
+          var column = document.createElement("td");
+          column.textContent=r[i];
+          switch (i) {
+            case 1:
+              column.dataset.name ="nom";
+              break;
+            case 2:
+              column.dataset.name ="prenom";
+               break;
+            case 3:
+              column.dataset.name ="telephone";
+               break;
+            case 4:
+              column.dataset.name ="statut";
+               break;
+            case 5:
+              column.dataset.name ="qteRun";
+               break;
+            case 6:
+              column.dataset.name ="qtePart";
+               break;
+            case 7:
+              column.dataset.name ="qteEnt";
+               break;
+            case 8:
+              column.textContent=Math.round(r[i])+" €";
+              column.dataset.name ="salaire";
+             
+              
+               break;
+            case 9:
+              column.dataset.name ="gainsEnt";
+              column.textContent=Math.round(r[i])+" €";
+               break;
+            case 10:
+              column.dataset.name ="eligible";
+               break;
+            
+          }
+          
+          column.setAttribute("name", r[0]);
+          row.appendChild(column);
+        }
+        // Edit btn
+        var column = document.createElement("td");
+        for (var i = 0 ; i <3;i++){
+          switch (i){
+            case 0:
+              var button = document.createElement("button");
+              var icone = document.createElement('i');
+              icone.textContent ="edit"
+              icone.classList.add("material-icons");
+              button.appendChild(icone);
+              button.setAttribute("onclick","edituser('"+r[0]+"')");
+              column.appendChild(button);
+              break;
+            case 1:
+              var button = document.createElement("button");
+              var icone = document.createElement('i');
+              icone.textContent ="paid"
+              icone.classList.add("material-icons");
+              button.appendChild(icone);
+              button.setAttribute("onclick","paiduser('"+r[0]+"')");
+              column.appendChild(button);
+            break;
+            case 2:
+              var button = document.createElement("button");
+              var icone = document.createElement('i');
+              icone.textContent ="delete"
+              icone.classList.add("material-icons");
+              button.appendChild(icone);
+              button.setAttribute("onclick","deleteuser('"+r[0]+"')");
+              column.appendChild(button);
+            break;
+          }
+          
+        }
+        row.appendChild(column);
+        tbody.appendChild(row);
+      })
+    }
+    
+    function myFunction() {
+        
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("filter-user");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("table-content");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[0];
+          if (td) {
+            txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+              tr[i].style.display = "";
+            } else {
+              tr[i].style.display = "none";
+            }
+          }       
+        }
+      }
+    
+    function reset(){
+        document.getElementById("container-register").style.display="none";
+        document.getElementById("container-edit").style.display="none";
+        document.getElementById("container-ouvrier").style.display="none";
+        document.getElementById("container-manager").style.display="none";
+        document.getElementById("container-adjoint").style.display="none";
+        document.getElementById("modal_background-container").style.display="flex";
+    }
+    function adduser(){
+        reset();
+        document.getElementById("container-register").style.display="flex";
+    }
+    function openOuvrier(){
+        reset();
+        document.getElementById("container-ouvrier").style.display="flex";
+    }
+    
+    function sendOuvrier(formObject){
+      var ouvrierInfo = formObject.taxeouvrier.value 
+      google.script.run.taxeOuvrier(ouvrierInfo);
+      closemodal();
+      reLoad();
+    }
+    function openManager(){
+        reset();
+        document.getElementById("container-manager").style.display="flex";
+    }
+    
+    function sendManager(formObject){
+      var managerInfo = formObject.taxemanager.value 
+      google.script.run.taxeManager(managerInfo);
+      closemodal();
+      reLoad();
+    }
+    
+    function openAdjoint(){
+        reset();
+        document.getElementById("container-adjoint").style.display="flex";
+    }
+    
+    function sendAdjoint(formObject){
+      
+      var adjointInfo = formObject.taxeadjoint.value 
+      google.script.run.taxeAdjoint(adjointInfo);
+      closemodal();
+      reLoad();
+    }
+    function edituser(id){
+        reset();
+        var test = document.querySelectorAll('td[name="'+id+'"]');
+        
+        test.forEach(box => {
+       
+           switch (box.dataset.name) {
+            case "nom":
+                document.getElementById('newnom').value=box.textContent;
+              break;
+            case "prenom":
+              document.getElementById('newprenom').value=box.textContent;
+               break;
+            case "telephone":
+              document.getElementById('newtelephone').value=box.textContent;
+               break;
+            case "statut":
+              document.getElementById('newrole').value=box.textContent;
+               break;
+            case "qteRun":
+             document.getElementById('newrun').value=box.textContent;
+               break;
+            case "qtePart":
+              document.getElementById('newpart').value=box.textContent;
+               break;
+            case "qteEnt":
+              document.getElementById('newent').value=box.textContent;
+               break;        
+          }
+        });
+        document.getElementById("container-edit").style.display="flex";
+        var form = document.getElementById('editform');
+         form.onsubmit = function() {
+            sendedit(id, this);
+        }
+       
+       
+    }
+    
+    function sendedit(id,form){
+      var userInfo = {};
+      userInfo.newnom = form.newnom.value 
+      userInfo.newprenom = form.newprenom.value 
+      userInfo.newtelephone = form.newtelephone.value 
+      userInfo.newrole = form.newrole.value 
+      userInfo.newrun = form.newrun.value 
+      userInfo.newpart = form.newpart.value 
+      userInfo.newent = form.newent.value 
+    
+      google.script.run.editForm(id,userInfo);
+      closemodal();
+      reLoad();
+    }
+    
+    
+    function paiduser(id){
+      let text = "Effectuer le payement ?";
+      if (confirm(text) == true) {
+        google.script.run.paiduser(id);
+       reLoad();
+      }  
+       
+    }
+    function deleteuser(id){
+      let text = "Êtes-vous sûr de licencier cette personne ?";
+      if (confirm(text) == true) {
+        google.script.run.deleteuser(id);
+        reLoad();
+      }  
+    }
+    function closemodal(){
+        document.getElementById("modal_background-container").style.display="none";
+    }
+    
+    </script>
